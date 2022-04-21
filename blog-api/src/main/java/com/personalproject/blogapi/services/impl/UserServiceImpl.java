@@ -5,6 +5,7 @@ import com.personalproject.blogapi.models.User;
 import com.personalproject.blogapi.payloads.UserDto;
 import com.personalproject.blogapi.repository.UserRepo;
 import com.personalproject.blogapi.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public UserDto createUser(UserDto userDto) {
 
@@ -60,11 +65,15 @@ public class UserServiceImpl implements UserService {
 
     private User dtoTomodel(UserDto userDto){
         User user=new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setAbout(userDto.getAbout());
+        user=this.modelMapper.map(userDto,User.class);
+
+        //below is the previous thing we were manually mapping one model with another
+        //modelmapper help it in making that automatic.
+//        user.setId(userDto.getId());
+//        user.setName(userDto.getName());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(userDto.getPassword());
+//        user.setAbout(userDto.getAbout());
 
         return user;
     }
@@ -72,11 +81,12 @@ public class UserServiceImpl implements UserService {
     public UserDto modelToDto(User user)
     {
         UserDto userDto=new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
-        userDto.setAbout(user.getAbout());
+        userDto=this.modelMapper.map(user,UserDto.class);
+//        userDto.setId(user.getId());
+//        userDto.setName(user.getName());
+//        userDto.setEmail(user.getEmail());
+//        userDto.setPassword(user.getPassword());
+//        userDto.setAbout(user.getAbout());
         return userDto;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -51,7 +52,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(PostDto postDto, Integer postId) {
+    public PostDto updatePost(PostDto postDto, Integer postId) {
         return null;
     }
 
@@ -61,27 +62,37 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPost() {
+    public List<PostDto> getAllPost() {
         return null;
     }
 
     @Override
-    public Post get(Integer postId) {
+    public PostDto get(Integer postId) {
         return null;
     }
 
     @Override
-    public List<Post> getPostsByCategory(Integer categoryId) {
-        return null;
+    public List<PostDto> getPostsByCategory(Integer categoryId) {
+        Category cat=this.categoryRepo.findById(categoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
+
+      List<Post>posts=  this.postRepo.findByCategory(cat);
+      List<PostDto>postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+        return postDtos;
     }
 
     @Override
-    public List<Post> getPostsByUser(Integer userId) {
-        return null;
+    public List<PostDto> getPostsByUser(Integer userId) {
+        User user=this.userRepo.findById(userId)
+                .orElseThrow(()->new ResourceNotFoundException("User","User Id",userId));
+
+        List<Post>posts=  this.postRepo.findByUser(user);
+        List<PostDto>postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+        return postDtos;
     }
 
     @Override
-    public List<Post> searchPosts(String searchKeyWord) {
+    public List<PostDto> searchPosts(String searchKeyWord) {
         return null;
     }
 }

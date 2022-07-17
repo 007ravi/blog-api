@@ -2,6 +2,7 @@ package com.personalproject.blogapi.services;
 
 import com.personalproject.blogapi.models.Post;
 import com.personalproject.blogapi.payloads.PostDto;
+import com.personalproject.blogapi.payloads.PostResponse;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface PostService {
     void deletePost(Integer postId);
 
     //get al posts
-    List<PostDto>getAllPost(Integer pageNumber,Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize);
 
     //get post by id
     PostDto getPostById(Integer postId);

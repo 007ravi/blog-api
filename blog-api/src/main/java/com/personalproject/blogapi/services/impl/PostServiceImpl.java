@@ -5,6 +5,7 @@ import com.personalproject.blogapi.models.Category;
 import com.personalproject.blogapi.models.Post;
 import com.personalproject.blogapi.models.User;
 import com.personalproject.blogapi.payloads.PostDto;
+import com.personalproject.blogapi.payloads.PostResponse;
 import com.personalproject.blogapi.repository.CategoryRepo;
 import com.personalproject.blogapi.repository.PostRepo;
 import com.personalproject.blogapi.repository.UserRepo;
@@ -71,14 +72,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost(Integer pageNumber,Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 
         Pageable p= PageRequest.of(pageNumber,pageSize);
         Page<Post> pagePosts= this.postRepo.findAll(p);
 
         List<Post> posts=pagePosts.getContent();
        List<PostDto>postDtos= posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
-        return postDtos;
+
+       PostResponse postResponse=new PostResponse();
+
+       postResponse.setContent(postDtos);
+       postResponse.setPageNumber(pagePosts.getNumber());
+       postResponse.setPageSize(pagePosts.getSize());
+       postResponse.setTotalElements(pagePosts.getTotalElements());
+       postResponse.setTotalPages(pagePosts.getTotalPages());
+       postResponse.setLastPage(pagePosts.isLast());
+
+       return postResponse;
     }
 
     @Override

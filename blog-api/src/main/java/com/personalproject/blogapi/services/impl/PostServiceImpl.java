@@ -105,9 +105,31 @@ public class PostServiceImpl implements PostService {
         Category cat=this.categoryRepo.findById(categoryId)
                 .orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
 
-      List<Post>posts=  this.postRepo.findByCategory(cat);
+        List<Post>posts= this.postRepo.findByCategory(cat);
       List<PostDto>postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
         return postDtos;
+    }
+
+    @Override
+    public PostResponse getPostsByCategoryPaging(Integer categoryId,Integer pageNumber, Integer pageSize){
+        Category cat=this.categoryRepo.findById(categoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Category","Category Id",categoryId));
+        Pageable p= PageRequest.of(pageNumber,pageSize);
+ //       Page<Post> pagePosts=  this.postRepo.findAllByCategory(cat,p);
+//        List<Post> posts=pagePosts.getContent();
+        List<Post> posts=this.postRepo.findAllByCategory(cat,p);
+        List<PostDto>postDtos= posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+
+        PostResponse postResponse=new PostResponse();
+
+        postResponse.setContent(postDtos);
+//        postResponse.setPageNumber(pagePosts.getNumber());
+//        postResponse.setPageSize(pagePosts.getSize());
+//        postResponse.setTotalElements(pagePosts.getTotalElements());
+//        postResponse.setTotalPages(pagePosts.getTotalPages());
+//        postResponse.setLastPage(pagePosts.isLast());
+
+        return postResponse;
     }
 
     @Override

@@ -20,6 +20,8 @@ public interface PostService {
     //get al posts
     PostResponse getAllPost(Integer pageNumber, Integer pageSize);
 
+    PostResponse getPostsByCategoryPaging(Integer categoryId,Integer pageNumber, Integer pageSize);
+
     //get post by id
     PostDto getPostById(Integer postId);
 

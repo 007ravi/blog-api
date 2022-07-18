@@ -33,6 +33,16 @@ public class PostController {
        return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}/paging/posts")
+    public ResponseEntity<PostResponse>getPostsByUserPaging(
+            @PathVariable Integer userId,
+            @RequestParam (value = "pageNumber", defaultValue = "0",required = false)Integer pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false)Integer pageSize
+    ){
+        PostResponse posts= this.postService.getPostsByUserPaging(userId,pageNumber,pageSize);
+        return new ResponseEntity<PostResponse>(posts,HttpStatus.OK);
+    }
+
     @GetMapping("/category/{categoryId}/posts")
     public ResponseEntity<List<PostDto>>getPostsByCategory(
             @PathVariable Integer categoryId

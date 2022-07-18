@@ -22,6 +22,8 @@ public interface PostService {
 
     PostResponse getPostsByCategoryPaging(Integer categoryId,Integer pageNumber, Integer pageSize);
 
+    PostResponse getPostsByUserPaging(Integer userId, Integer pageNumber, Integer pageSize);
+
     //get post by id
     PostDto getPostById(Integer postId);
 
@@ -33,4 +35,5 @@ public interface PostService {
 
     //searchPost
     List<PostDto>searchPosts(String searchKeyWord);
+
 }

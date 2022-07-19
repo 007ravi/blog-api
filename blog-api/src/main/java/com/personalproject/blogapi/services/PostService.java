@@ -33,7 +33,9 @@ public interface PostService {
     //get all post by User
     List<PostDto> getPostsByUser(Integer userId);
 
-    //searchPost
-    List<PostDto>searchPosts(String searchKeyWord);
+    //searchPost by title using ?1
+    List<PostDto>searchPostsByTitle(String searchKeyWord);
 
+    //searchPost by content usning param :searchkeyword
+    List<PostDto>searchPostsByContent(String searchKeyWord);
 }

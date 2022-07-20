@@ -144,9 +144,9 @@ public class PostController {
                 return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
             }
 
-            ////////////method to serve file
+            ////////////method to serve file using image name as path variable
 
-            @GetMapping(value="post/image/{imageName}",produces= MediaType.IMAGE_JPEG_VALUE)
+            @GetMapping(value="post/imageName/{imageName}",produces= MediaType.IMAGE_JPEG_VALUE)
             public void downloadImage(
                     @PathVariable String imageName,
                     HttpServletResponse response
@@ -155,5 +155,21 @@ public class PostController {
                 response.setContentType(MediaType.IMAGE_JPEG_VALUE);
                 StreamUtils.copy(resource,response.getOutputStream());
             }
+
+    ////////////method to serve file using postId as path variable
+
+    @GetMapping(value="post/image/postId/{postId}",produces= MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImageWithPostId(
+            @PathVariable Integer postId,
+            HttpServletResponse response
+    )throws IOException{
+        PostDto postDto=this.postService.getPostById(postId);
+        String imageName=postDto.getImageName();
+        InputStream resource=this.fileService.getResource(path,imageName);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
+    }
+
+  
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -170,6 +171,33 @@ public class PostController {
         StreamUtils.copy(resource,response.getOutputStream());
     }
 
-  
+    ////////////method to delete file using postId as path variable
+
+    @DeleteMapping(value="post/deleteImage/postId/{postId}")
+    public String DeleteImageWithPostId(
+            @PathVariable Integer postId,
+            HttpServletResponse response
+    )throws IOException{
+        PostDto postDto=this.postService.getPostById(postId);
+        String imageName=postDto.getImageName();
+        if(!imageName.equals("File has already been deleted from the post")) {
+            String fullPath = path + File.separator + imageName;
+            // InputStream resource=this.fileService.getResource(path,imageName);
+            File file = new File(fullPath);
+            if (file.delete()) {
+                System.out.println("File deleted successfully");
+                imageName="File has already been deleted from the post";
+                postDto.setImageName(imageName);
+                this.postService.updatePost(postDto,postId);
+                return "File deleted successfully";
+            } else {
+                System.out.println("Failed to delete the file");
+                return "Failed to delete the file";
+            }
+        }
+        else
+            return "File has already been deleted from the post";
+
+    }
 
 }

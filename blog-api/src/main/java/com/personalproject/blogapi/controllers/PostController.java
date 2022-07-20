@@ -164,11 +164,23 @@ public class PostController {
             @PathVariable Integer postId,
             HttpServletResponse response
     )throws IOException{
-        PostDto postDto=this.postService.getPostById(postId);
-        String imageName=postDto.getImageName();
-        InputStream resource=this.fileService.getResource(path,imageName);
-        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        StreamUtils.copy(resource,response.getOutputStream());
+        InputStream resource=null;
+        try {
+            PostDto postDto = this.postService.getPostById(postId);
+            String imageName = postDto.getImageName();
+            resource = this.fileService.getResource(path, imageName);
+            response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+            StreamUtils.copy(resource, response.getOutputStream());
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        finally {
+            if(resource!=null)
+                resource.close();
+
+        }
     }
 
     ////////////method to delete file using postId as path variable

@@ -4,12 +4,16 @@ import com.personalproject.blogapi.models.Post;
 import com.personalproject.blogapi.payloads.ApiResponse;
 import com.personalproject.blogapi.payloads.PostDto;
 import com.personalproject.blogapi.payloads.PostResponse;
+import com.personalproject.blogapi.services.FileService;
 import com.personalproject.blogapi.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,6 +22,12 @@ public class PostController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto>createPost(@RequestBody PostDto postDto, @PathVariable Integer userId,@PathVariable Integer categoryId){
@@ -108,4 +118,25 @@ public class PostController {
         List<PostDto>postDtos=this.postService.searchPostsByContent(keywords);
         return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
     }
+
+    //post image upload
+//    @PostMapping("/post/image/upload/{postId}")
+//    @Consumes("multipart/form-data")
+//    @Produces("application/json")
+    @ResponseBody
+    @RequestMapping(    produces="application/json",
+            consumes="multipart/form-data",
+            method=RequestMethod.POST,
+            value="/post/image/upload/{postId}")
+    public ResponseEntity<PostDto>uploadPostImage(
+            @RequestParam("image")MultipartFile image,
+            @PathVariable Integer postId
+            ) throws IOException {
+              PostDto postDto=this.postService.getPostById(postId);
+              String fileName=  this.fileService.uploadImage(path,image);
+
+              postDto.setImageName(fileName);
+              PostDto updatePost=this.postService.updatePost(postDto,postId);
+                return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
+            }
 }

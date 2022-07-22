@@ -44,4 +44,9 @@ public class FileServiceImpl implements FileService {
         InputStream is =new FileInputStream(fullPath);
         return is;
     }
+
+    @Override
+    public String deleteImage(String path) throws FileNotFoundException {
+        return null;
+    }
 }

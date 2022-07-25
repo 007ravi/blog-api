@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf()
                 .disable()
         .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/auth/v1/**").permitAll()
                 .antMatchers("/v3/api-docs/**","/vw/api-docs/**").permitAll()
                 .antMatchers("/swagger-resources/**","/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
@@ -65,8 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();///no encoding for now
-        //return new BCryptPasswordEncoder();
+    //    return NoOpPasswordEncoder.getInstance();///no encoding for now
+        return new BCryptPasswordEncoder();
     }
 
     @Override

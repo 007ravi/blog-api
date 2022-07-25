@@ -1,5 +1,6 @@
 package com.personalproject.blogapi.controllers;
 
+import com.personalproject.blogapi.exceptions.ApiException;
 import com.personalproject.blogapi.payloads.JwtAuthRequest;
 import com.personalproject.blogapi.payloads.JwtAuthResponse;
 import com.personalproject.blogapi.security.JwtTokenHelper;
@@ -53,7 +54,7 @@ public class AuthController {
             this.authenticationManager.authenticate(authenticationToken);
         }
         catch (Exception e){
-            throw new Exception("Invalid user name or passowrd");
+            throw new ApiException("Invalid user name or passowrd");
         }
     }
 }

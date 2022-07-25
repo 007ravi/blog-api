@@ -40,7 +40,7 @@ public class UserController {
       //  return new ResponseEntity(Map.of("message","User deleted successfully"),HttpStatus.OK);
         return new ResponseEntity(new ApiResponse("User deleted successsfully",true),HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','DBADMIN','NORMAL')")
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> getAllUsers(){
 

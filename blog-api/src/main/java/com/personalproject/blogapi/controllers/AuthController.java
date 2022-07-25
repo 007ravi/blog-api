@@ -3,12 +3,15 @@ package com.personalproject.blogapi.controllers;
 import com.personalproject.blogapi.exceptions.ApiException;
 import com.personalproject.blogapi.payloads.JwtAuthRequest;
 import com.personalproject.blogapi.payloads.JwtAuthResponse;
+import com.personalproject.blogapi.payloads.UserDto;
 import com.personalproject.blogapi.security.JwtTokenHelper;
+import com.personalproject.blogapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,9 @@ public class AuthController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -56,5 +62,13 @@ public class AuthController {
         catch (Exception e){
             throw new ApiException("Invalid user name or passowrd");
         }
+    }
+
+    //register new user api
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+
+        UserDto registerUser=this.userService.registerNewUser(userDto);
+        return new ResponseEntity<UserDto>(registerUser,HttpStatus.CREATED);
     }
 }

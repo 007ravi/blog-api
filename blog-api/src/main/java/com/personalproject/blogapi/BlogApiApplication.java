@@ -34,7 +34,7 @@ public class BlogApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception{
-		System.out.println(this.passwordEncoder.encode(args[0]));
+	//	System.out.println(this.passwordEncoder.encode(args[0]));
 
 		try{
 			//crete role in starting if role is not in role table
